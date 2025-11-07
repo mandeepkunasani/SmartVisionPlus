@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartVision+ | AI Face Attendance</title>
+    <style>
+        :root {
+          --blue: #0d47a1;
+          --accent: #1565c0;
+          --light-blue: #e8f0ff;
+          --bg: #f5f9ff;
+          --text: #0e1b2a;
+          --muted: #6b7b95;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: "Poppins", sans-serif;
+          background: var(--bg);
+          color: var(--text);
+        }
+
+        /* HEADER */
+        header {
+          background: linear-gradient(135deg, var(--blue), var(--accent));
+          color: white;
+          padding: 18px 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        header h1 {
+          margin: 0;
+          font-size: 22px;
+          letter-spacing: 0.5px;
+        }
+        header nav a {
+          color: white;
+          text-decoration: none;
+          margin-left: 20px;
+          font-weight: 600;
+          background: rgba(255,255,255,0.15);
+          padding: 8px 14px;
+          border-radius: 10px;
+          transition: 0.3s;
+        }
+        header nav a:hover {
+          background: rgba(255,255,255,0.3);
+        }
+
+        /* HERO SECTION */
+        .hero {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          padding: 80px 50px;
+          background: var(--light-blue);
+        }
+        .hero-text {
+          flex: 1 1 500px;
+        }
+        .hero-text h2 {
+          color: var(--blue);
+          font-size: 38px;
+          margin: 0 0 10px;
+        }
+        .hero-text p {
+          color: var(--muted);
+          font-size: 16px;
+          margin-bottom: 25px;
+          line-height: 1.6;
+        }
+        .hero-text .btn {
+          background: var(--accent);
+          color: white;
+          text-decoration: none;
+          padding: 14px 22px;
+          border-radius: 10px;
+          font-weight: 600;
+          margin-right: 10px;
+          transition: 0.3s;
+        }
+        .hero-text .btn:hover {
+          background: #0b63d1;
+        }
+        .hero img {
+          flex: 1 1 400px;
+          max-width: 480px;
+          width: 100%;
+          border-radius: 20px;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        /* FEATURES SECTION */
+        .features {
+          text-align: center;
+          padding: 70px 40px;
+          background: white;
+        }
+        .features h3 {
+          color: var(--blue);
+          font-size: 28px;
+          margin-bottom: 10px;
+        }
+        .features p {
+          color: var(--muted);
+          margin-bottom: 50px;
+        }
+        .feature-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 25px;
+          max-width: 1100px;
+          margin: auto;
+        }
+        .feature {
+          background: var(--bg);
+          padding: 25px;
+          border-radius: 14px;
+          border: 1px solid #dbe6ff;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+          transition: transform 0.3s;
+        }
+        .feature:hover { transform: translateY(-6px); }
+        .feature i {
+          font-size: 40px;
+          color: var(--accent);
+          margin-bottom: 10px;
+        }
+        .feature h4 {
+          color: var(--blue);
+          margin-bottom: 8px;
+        }
+
+        /* TEAM SECTION */
+        .team {
+          background: var(--light-blue);
+          text-align: center;
+          padding: 60px 30px;
+        }
+        .team h3 {
+          color: var(--blue);
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+        .team-members {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 20px;
+        }
+        .member {
+          background: white;
+          border-radius: 12px;
+          padding: 20px;
+          width: 220px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .member h4 { color: var(--blue); margin: 10px 0 5px; }
+        .member p { color: var(--muted); margin: 0; font-size: 14px; }
+
+        /* FOOTER */
+        footer {
+          background: var(--blue);
+          color: white;
+          text-align: center;
+          padding: 18px;
+          font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+          .hero {
+            flex-direction: column;
+            text-align: center;
+          }
+          .hero img {
+            margin-top: 30px;
+          }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>SmartVision+</h1>
+    <nav>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-text">
+        <h2>AI-Powered Smart Attendance System</h2>
+        <p>SmartVision+ uses Artificial Intelligence and Face Recognition to automate student attendance, providing a fast, accurate, and secure classroom management system.</p>
+        <a href="login.html" class="btn">Login</a>
+        <a href="signup.html" class="btn" style="background:#10b981;">Sign Up</a>
+    </div>
+    <img src="https://cdn.pixabay.com/photo/2017/06/29/00/24/face-2451593_960_720.jpg" alt="AI Vision" />
+</section>
+
+<section class="features">
+    <h3>🌟 Key Features</h3>
+    <p>Built to make attendance tracking smarter and effortless.</p>
+    <div class="feature-grid">
+        <div class="feature">
+            <i>🤖</i>
+            <h4>AI Face Detection</h4>
+            <p>Detect and identify faces accurately using advanced machine learning models.</p>
+        </div>
+        <div class="feature">
+            <i>📋</i>
+            <h4>Automated Attendance</h4>
+            <p>Automatically mark student attendance without manual effort or errors.</p>
+        </div>
+        <div class="feature">
+            <i>💾</i>
+            <h4>Data Storage</h4>
+            <p>Store attendance and student details securely with fast retrieval options.</p>
+        </div>
+        <div class="feature">
+            <i>📊</i>
+            <h4>Reports & Analytics</h4>
+            <p>Visualize attendance reports to monitor student participation effectively.</p>
+        </div>
+    </div>
+</section>
+
+<section class="team">
+    <h3>👨‍💻 Project Team</h3>
+    <div class="team-members">
+        <div class="member">
+            <h4>Mandeep Kunasani</h4>
+            <p>RA2411003012077</p>
+        </div>
+        <div class="member">
+            <h4>Puneeth</h4>
+            <p>RA2411003012075</p>
+        </div>
+        <div class="member">
+            <h4>Niteesh</h4>
+            <p>RA2411003012090</p>
+        </div>
+        <div class="member">
+            <h4>Vinay</h4>
+            <p>RA2411003012086</p>
+        </div>
+    </div>
+    <p style="margin-top:20px;">Under the Guidance of <strong>Dr. [Your Guide’s Name]</strong></p>
+</section>
+
+<footer>
+    ©️ 2025 SmartVision+ | AI Attendance Project | All Rights Reserved
+</footer>
+</body>
+</html>

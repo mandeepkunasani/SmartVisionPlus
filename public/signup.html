@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartVision+ | Faculty Signup</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: 'Poppins', sans-serif;
+          background: linear-gradient(135deg, #ffffff, #cce5ff);
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .signup-box {
+          background: white;
+          padding: 40px;
+          border-radius: 14px;
+          box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+          width: 400px;
+          text-align: center;
+        }
+        h2 {
+          color: #1565c0;
+          margin-bottom: 10px;
+        }
+        p {
+          color: #6b7b95;
+          margin-bottom: 25px;
+          font-size: 14px;
+        }
+        input, select {
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 14px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+        }
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #1565c0;
+          border: none;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+        button:hover {
+          background: #0d47a1;
+        }
+        .alert {
+          display: none;
+          margin-bottom: 15px;
+          padding: 10px;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 13px;
+        }
+        .alert.error {
+          background: #ffecec;
+          color: #b91c1c;
+          border: 1px solid #ffbcbc;
+        }
+        .alert.success {
+          background: #e8f8ee;
+          color: #0a7b55;
+          border: 1px solid #a9e1bb;
+        }
+        .bottom {
+          margin-top: 15px;
+          font-size: 14px;
+        }
+        .bottom a {
+          color: #1565c0;
+          text-decoration: none;
+          font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-box">
+    <h2>SmartVision+ Signup</h2>
+    <p>Create your faculty account</p>
+
+    <div id="alertBox" class="alert"></div>
+
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <select id="dept" required>
+        <option value="">Select Department</option>
+        <option>CSE</option>
+        <option>IT</option>
+        <option>ECE</option>
+        <option>EEE</option>
+    </select>
+    <input type="text" id="class_name" placeholder="Class (e.g. CSE-A)" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <input type="password" id="confirm" placeholder="Confirm Password" required />
+    <button id="signupBtn">Create Account</button>
+
+    <div class="bottom">
+        Already have an account? <a href="login.html">Login</a>
+    </div>
+</div>
+
+<script>
+    const btn = document.getElementById("signupBtn");
+    const alertBox = document.getElementById("alertBox");
+
+    btn.addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const dept = document.getElementById("dept").value.trim();
+      const class_name = document.getElementById("class_name").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirm = document.getElementById("confirm").value.trim();
+
+      if (!name || !email || !dept || !class_name || !password || !confirm) {
+        showAlert("Please fill all fields.", "error");
+        return;
+      }
+      if (password !== confirm) {
+        showAlert("Passwords do not match!", "error");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5001/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, department: dept, class_name, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAlert("✅ Account created successfully! Redirecting...", "success");
+          setTimeout(() => (window.location.href = "login.html"), 1500);
+        } else {
+          showAlert("⚠️ Signup failed. Try again.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert("Server error. Check backend connection.", "error");
+      }
+    });
+
+    function showAlert(msg, type) {
+      alertBox.textContent = msg;
+      alertBox.className = "alert " + type;
+      alertBox.style.display = "block";
+    }
+</script>
+</body>
+</html>

@@ -1,103 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SmartVision+ | Enroll Student</title>
     <style>
         body {
           margin: 0;
-          padding: 0;
-          font-family: "Segoe UI", sans-serif;
-          background: linear-gradient(135deg, #001F54, #004AAD);
-          color: #fff;
-          height: 100vh;
+          font-family: "Poppins", sans-serif;
+          background: #eef3fb;
+          color: #0a1c3c;
+        }
+
+        nav {
+          background: linear-gradient(135deg, #0d47a1, #1565c0);
+          color: white;
+          padding: 14px 20px;
           display: flex;
-          flex-direction: column;
-          justify-content: center;
+          justify-content: space-between;
           align-items: center;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        nav h1 {
+          margin: 0;
+          font-size: 22px;
+          font-weight: 700;
+        }
+
+        nav .links a {
+          color: white;
+          text-decoration: none;
+          margin-left: 15px;
+          font-weight: 500;
+          background: rgba(255, 255, 255, 0.15);
+          padding: 8px 12px;
+          border-radius: 8px;
+        }
+
+        main {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr;
+          gap: 30px;
+          padding: 40px;
+        }
+
+        .panel {
+          background: white;
+          border-radius: 15px;
+          padding: 20px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
         }
 
         h2 {
-          color: #00e0ff;
-          text-shadow: 0 0 10px #00e0ff;
-          margin-bottom: 25px;
+          color: #0d47a1;
+          margin-top: 0;
         }
 
-        .enroll-box {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 40px;
-          border-radius: 15px;
-          width: 90%;
-          max-width: 500px;
-          text-align: center;
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-          animation: fadeIn 1s ease-in-out;
-        }
-
-        input, select {
+        video {
           width: 100%;
-          padding: 12px;
-          border: none;
-          border-radius: 8px;
-          margin-bottom: 15px;
-          font-size: 1em;
-          background: rgba(255,255,255,0.9);
-          color: #000;
+          height: 400px;
+          border-radius: 10px;
+          background: #d7e6ff;
+          border: 2px dashed #9cbcff;
+          object-fit: cover;
+        }
+
+        .controls {
+          margin-top: 15px;
+          display: flex;
+          gap: 10px;
         }
 
         button {
-          width: 100%;
-          padding: 12px;
-          background: #00d9ff;
+          background: #1565c0;
           color: white;
           border: none;
+          padding: 10px 15px;
           border-radius: 8px;
-          font-weight: bold;
-          font-size: 1.1em;
+          font-weight: 600;
           cursor: pointer;
           transition: 0.3s;
         }
 
         button:hover {
-          background: #00a9cc;
-          box-shadow: 0 0 10px #00d9ff;
+          background: #0b63d1;
         }
 
-        a {
-          color: #00e0ff;
-          text-decoration: none;
+        button.secondary {
+          background: #f0f4ff;
+          color: #0d47a1;
+          border: 1px solid #bcd3ff;
+        }
+
+        label {
+          font-weight: 600;
           display: block;
+          margin-top: 12px;
+        }
+
+        input,
+        select {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid #cfdfff;
+          margin-top: 6px;
+          margin-bottom: 10px;
+        }
+
+        .status {
           margin-top: 15px;
+          padding: 10px;
+          border-radius: 8px;
+          display: none;
+          font-weight: 600;
         }
 
-        a:hover {
-          text-decoration: underline;
+        .success {
+          background: #e6f8ed;
+          border: 1px solid #b8ebc7;
+          color: #0a7b55;
         }
 
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+        .error {
+          background: #ffecec;
+          border: 1px solid #ffbdbd;
+          color: #b91c1c;
+        }
+
+        @media (max-width: 900px) {
+          main {
+            grid-template-columns: 1fr;
+          }
         }
     </style>
 </head>
+
 <body>
-<h2>🧑‍🎓 Enroll New Student</h2>
-<div class="enroll-box">
-    <form action="/enroll" method="POST">
-        <input type="text" name="name" placeholder="Student Name" required>
-        <input type="text" name="reg_no" placeholder="Register Number" required>
-        <select name="class_name" required>
-            <option value="">Select Class</option>
-            <option value="CSE-A">CSE - A</option>
-            <option value="CSE-B">CSE - B</option>
-            <option value="AIML">AIML</option>
-            <option value="IT">IT</option>
-            <option value="ECE">ECE</option>
-        </select>
-        <button type="submit">Enroll Student</button>
-    </form>
-    <a href="/dashboard.html">← Back to Dashboard</a>
-</div>
+<nav>
+    <h1>SmartVision+ • Enroll Student</h1>
+    <div class="links">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="camera.html">📷 Camera</a>
+        <a href="attendance.html">📋 Attendance</a>
+        <a href="profile.html">👤 Profile</a>
+    </div>
+</nav>
+
+<main>
+    <!-- Left side -->
+    <section class="panel">
+        <h2>Camera Preview</h2>
+        <video id="video" autoplay></video>
+        <div class="controls">
+            <button id="btnStart">🎥 Start Camera</button>
+            <button id="btnCapture" class="secondary">📸 Capture</button>
+            <button id="btnStop" class="secondary">⏹ Stop</button>
+        </div>
+    </section>
+
+    <!-- Right side -->
+    <section class="panel">
+        <h2>Student Details</h2>
+        <form id="enrollForm">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Enter student name" required />
+
+            <label>Register Number</label>
+            <input type="text" id="regno" placeholder="Ex: RA2411003012077" required />
+
+            <label>Class</label>
+            <input type="text" id="class" placeholder="Ex: CSE-A" required />
+
+            <label>Department</label>
+            <select id="department" required>
+                <option value="">Select department</option>
+                <option value="CSE">CSE</option>
+                <option value="IT">IT</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MECH">MECH</option>
+            </select>
+
+            <div class="controls">
+                <button type="button" id="btnEnroll">💾 Enroll Student</button>
+                <button type="reset" class="secondary">Clear</button>
+            </div>
+        </form>
+        <div id="status" class="status"></div>
+    </section>
+</main>
+
+<script>
+    let stream = null;
+    let capturedImage = null;
+    const video = document.getElementById("video");
+    const statusBox = document.getElementById("status");
+
+    function showStatus(msg, type) {
+      statusBox.textContent = msg;
+      statusBox.className = "status " + type;
+      statusBox.style.display = "block";
+    }
+
+    document.getElementById("btnStart").addEventListener("click", async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        showStatus("Camera started successfully.", "success");
+      } catch (err) {
+        console.error(err);
+        showStatus("⚠️ Failed to start camera.", "error");
+      }
+    });
+
+    document.getElementById("btnStop").addEventListener("click", () => {
+      if (stream) {
+        stream.getTracks().forEach((t) => t.stop());
+        video.srcObject = null;
+        showStatus("Camera stopped.", "success");
+      }
+    });
+
+    document.getElementById("btnCapture").addEventListener("click", () => {
+      if (!stream) {
+        showStatus("Start the camera first!", "error");
+        return;
+      }
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Fix mirrored view
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      capturedImage = canvas.toDataURL("image/jpeg", 1.0);
+
+      if (capturedImage.length > 1000) {
+        showStatus("✅ Face captured successfully!", "success");
+        console.log("Captured image size:", capturedImage.length);
+      } else {
+        showStatus("⚠️ Capture failed — try again.", "error");
+      }
+    });
+
+    document.getElementById("btnEnroll").addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const reg_no = document.getElementById("regno").value.trim();
+      const class_name = document.getElementById("class").value.trim();
+      const department = document.getElementById("department").value.trim();
+
+      if (!name || !reg_no || !class_name || !department) {
+        showStatus("Please fill all fields.", "error");
+        return;
+      }
+      if (!capturedImage) {
+        showStatus("Capture a face before enrolling.", "error");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5001/capture_face", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            reg_no,
+            class_name,
+            department,
+            image: capturedImage,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showStatus("✅ " + data.message, "success");
+        } else {
+          showStatus("❌ " + data.message, "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showStatus("Server not reachable. Check backend.", "error");
+      }
+    });
+</script>
 </body>
 </html>

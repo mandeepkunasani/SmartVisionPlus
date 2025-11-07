@@ -1,0 +1,234 @@
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartVision+ | Auto Attendance</title>
+    <style>
+        :root {
+          --blue: #0d47a1;
+          --accent: #1565c0;
+          --bg: #f5f9ff;
+          --panel: #ffffff;
+          --border: #dbe6ff;
+          --text: #0e1b2a;
+          --muted: #6b7b95;
+          --ok: #10b981;
+          --warn: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: "Poppins", sans-serif;
+          background: var(--bg);
+          color: var(--text);
+        }
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: linear-gradient(135deg, var(--blue), var(--accent));
+          color: white;
+          padding: 14px 20px;
+        }
+        nav .brand { font-weight: 800; }
+        nav .nav-actions a {
+          color: #fff;
+          text-decoration: none;
+          margin-left: 15px;
+          font-weight: 600;
+          background: rgba(255, 255, 255, 0.15);
+          padding: 8px 12px;
+          border-radius: 8px;
+        }
+        nav .nav-actions a:hover { background: rgba(255, 255, 255, 0.3); }
+
+        main {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr;
+          gap: 25px;
+          padding: 20px;
+          max-width: 1200px;
+          margin: 20px auto;
+        }
+        .panel {
+          background: var(--panel);
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+          padding: 20px;
+        }
+        h2 { color: var(--blue); }
+        video {
+          width: 100%;
+          border-radius: 10px;
+          border: 2px dashed #b9cff9;
+          height: 400px;
+          background: #eef5ff;
+        }
+        .controls {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 15px;
+        }
+        button {
+          padding: 10px 16px;
+          border-radius: 8px;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .start { background: var(--accent); color: #fff; }
+        .stop { background: #eee; color: #333; border: 1px solid #ccc; }
+        .log-box {
+          height: 320px;
+          overflow-y: auto;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 10px;
+          background: #f9fbff;
+        }
+        .log {
+          border-bottom: 1px solid #e0e9ff;
+          padding: 8px 0;
+          font-size: 14px;
+        }
+        .present { color: #0b7a27; font-weight: 700; }
+        .unknown { color: #b91c1c; font-weight: 700; }
+        .stats {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 15px;
+          font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="brand">SmartVision+ • Auto Attendance</div>
+    <div class="nav-actions">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="enroll.html">🧑‍🎓 Enroll</a>
+        <a href="attendance.html">📋 Attendance</a>
+    </div>
+</nav>
+
+<main>
+    <!-- Left side: Camera -->
+    <section class="panel">
+        <h2>🎥 Live Camera</h2>
+        <video id="video" autoplay muted></video>
+
+        <div class="controls">
+            <button id="btnStart" class="start">▶️ Start Attendance</button>
+            <button id="btnStop" class="stop">⏹ Stop</button>
+            <button id="btnSnap" class="stop">📸 Capture Snapshot</button>
+        </div>
+
+        <div class="stats">
+            <div>Faces Detected: <span id="faceCount">0</span></div>
+            <div>Recognized: <span id="recognizedCount">0</span></div>
+        </div>
+    </section>
+
+    <!-- Right side: Recognition Log -->
+    <section class="panel">
+        <h2>📋 Recognition Log</h2>
+        <div class="log-box" id="logBox">
+            <div class="log">No recognition yet...</div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const video = document.getElementById("video");
+    const logBox = document.getElementById("logBox");
+    const faceCountEl = document.getElementById("faceCount");
+    const recognizedCountEl = document.getElementById("recognizedCount");
+
+    let stream = null;
+    let interval = null;
+    let totalRecognized = 0;
+
+    async function startCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (err) {
+        alert("⚠️ Cannot access camera. Allow permission and try again.");
+        console.error(err);
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+        clearInterval(interval);
+        appendLog("🔴 Attendance stopped.", "unknown");
+      }
+    }
+
+    async function captureFrame() {
+      if (!stream) return;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"));
+      const formData = new FormData();
+      formData.append("image", blob);
+
+      try {
+        const res = await fetch("http://127.0.0.1:5001/recognize", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          const recognized = data.recognized || [];
+          faceCountEl.textContent = recognized.length;
+          totalRecognized += recognized.length;
+          recognizedCountEl.textContent = totalRecognized;
+
+          if (recognized.length === 0) {
+            appendLog("No known faces detected.", "unknown");
+          } else {
+            recognized.forEach(p => {
+              appendLog(`✅ ${p.name} (${p.reg_no}) marked present.`, "present");
+            });
+          }
+        } else {
+          appendLog("⚠️ " + data.message, "unknown");
+        }
+      } catch (err) {
+        appendLog("❌ Error reaching backend.", "unknown");
+      }
+    }
+
+    function appendLog(msg, type) {
+      const div = document.createElement("div");
+      div.className = "log " + type;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logBox.prepend(div);
+    }
+
+    document.getElementById("btnStart").addEventListener("click", async () => {
+      await startCamera();
+      appendLog("🟢 Attendance started.", "present");
+      interval = setInterval(captureFrame, 3000);
+    });
+
+    document.getElementById("btnStop").addEventListener("click", stopCamera);
+
+    document.getElementById("btnSnap").addEventListener("click", () => {
+      captureFrame();
+      appendLog("📸 Snapshot captured manually.", "present");
+    });
+</script>
+</body>
+</html>

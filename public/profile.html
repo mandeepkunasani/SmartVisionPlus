@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartVision+ | Faculty Profile</title>
+    <style>
+        :root {
+          --blue: #0d47a1;
+          --accent: #1565c0;
+          --bg: #f5f9ff;
+          --panel: #ffffff;
+          --border: #dbe6ff;
+          --text: #0e1b2a;
+          --muted: #6b7b95;
+          --ok: #10b981;
+          --warn: #ef4444;
+        }
+        body {
+          margin: 0;
+          font-family: "Poppins", sans-serif;
+          background: var(--bg);
+          color: var(--text);
+        }
+        nav {
+          background: linear-gradient(135deg, var(--blue), var(--accent));
+          color: #fff;
+          padding: 14px 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        nav h1 { margin: 0; font-size: 22px; }
+        nav .actions a {
+          color: white;
+          text-decoration: none;
+          margin-left: 15px;
+          font-weight: 600;
+          background: rgba(255,255,255,0.15);
+          padding: 8px 12px;
+          border-radius: 10px;
+        }
+        main {
+          max-width: 600px;
+          margin: 40px auto;
+          background: var(--panel);
+          padding: 30px;
+          border-radius: 14px;
+          border: 1px solid var(--border);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+          color: var(--blue);
+          text-align: center;
+          margin-top: 0;
+        }
+        label {
+          display: block;
+          margin-top: 15px;
+          font-weight: 600;
+        }
+        input, select {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid var(--border);
+          outline: none;
+          font-size: 14px;
+        }
+        button {
+          background: var(--accent);
+          color: white;
+          border: none;
+          padding: 12px;
+          width: 100%;
+          border-radius: 10px;
+          margin-top: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+        button:hover { background: #0b63d1; }
+        .status {
+          text-align: center;
+          margin-top: 15px;
+          font-weight: 600;
+          display: none;
+        }
+        .ok { color: var(--ok); }
+        .error { color: var(--warn); }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>SmartVision+ • Faculty Profile</h1>
+    <div class="actions">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="enroll.html">🧑‍🎓 Enroll</a>
+        <a href="camera.html">📷 Camera</a>
+        <a href="attendance.html">📋 Attendance</a>
+    </div>
+</nav>
+
+<main>
+    <h2>👤 Faculty Information</h2>
+
+    <form id="profileForm">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" disabled />
+
+        <label for="dept">Department</label>
+        <select id="dept" required>
+            <option value="">Select Department</option>
+            <option>CSE</option>
+            <option>IT</option>
+            <option>ECE</option>
+            <option>EEE</option>
+        </select>
+
+        <label for="class">Class</label>
+        <select id="class" required>
+            <option value="">Select Class</option>
+            <option>CSE-A</option>
+            <option>CSE-B</option>
+            <option>IT-A</option>
+            <option>ECE-A</option>
+        </select>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter new password" required />
+
+        <button type="submit">💾 Update Details</button>
+    </form>
+
+    <div id="statusBox" class="status"></div>
+</main>
+
+<script>
+    const form = document.getElementById("profileForm");
+    const statusBox = document.getElementById("statusBox");
+
+    async function loadProfile() {
+      try {
+        const res = await fetch("http://127.0.0.1:5001/faculty-info");
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById("name").value = data.name;
+          document.getElementById("email").value = data.email;
+          document.getElementById("dept").value = data.department;
+          document.getElementById("class").value = data.class_name;
+        } else {
+          showStatus("⚠️ Not logged in. Please login again.", "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showStatus("⚠️ Could not load profile.", "error");
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        name: document.getElementById("name").value,
+        department: document.getElementById("dept").value,
+        class_name: document.getElementById("class").value,
+        password: document.getElementById("password").value
+      };
+
+      try {
+        const res = await fetch("http://127.0.0.1:5001/update-faculty", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showStatus("✅ Profile updated successfully!", "ok");
+        } else {
+          showStatus("⚠️ " + (data.message || "Update failed."), "error");
+        }
+      } catch (err) {
+        console.error(err);
+        showStatus("❌ Server error during update.", "error");
+      }
+    });
+
+    function showStatus(msg, type) {
+      statusBox.textContent = msg;
+      statusBox.className = "status " + type;
+      statusBox.style.display = "block";
+    }
+
+    loadProfile();
+</script>
+</body>
+</html>

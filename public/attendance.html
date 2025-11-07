@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVision+ | Attendance Records</title>
+    <style>
+        :root {
+          --blue: #0d47a1;
+          --accent: #1565c0;
+          --bg: #f5f9ff;
+          --panel: #ffffff;
+          --border: #dbe6ff;
+          --text: #0e1b2a;
+          --muted: #6b7b95;
+          --ok: #10b981;
+          --warn: #ef4444;
+        }
+        body {
+          margin: 0;
+          font-family: 'Poppins', sans-serif;
+          background: var(--bg);
+          color: var(--text);
+        }
+        nav {
+          background: linear-gradient(135deg, var(--blue), var(--accent));
+          color: #fff;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px 20px;
+        }
+        nav .brand {
+          font-weight: 700;
+          font-size: 20px;
+        }
+        nav .nav-actions a {
+          color: #fff;
+          text-decoration: none;
+          margin-left: 15px;
+          font-weight: 600;
+          background: rgba(255, 255, 255, 0.15);
+          padding: 8px 12px;
+          border-radius: 8px;
+        }
+        main {
+          max-width: 1100px;
+          margin: 30px auto;
+          background: var(--panel);
+          padding: 20px;
+          border-radius: 14px;
+          border: 1px solid var(--border);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+          color: var(--blue);
+          margin-top: 0;
+        }
+        .filters {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+        }
+        input, select, button {
+          padding: 10px 12px;
+          border-radius: 8px;
+          border: 1px solid var(--border);
+          outline: none;
+          font-size: 14px;
+        }
+        button {
+          background: var(--accent);
+          color: #fff;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+          transition: 0.2s;
+        }
+        button:hover { background: #0b63d1; }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+          font-size: 14px;
+        }
+        th, td {
+          border: 1px solid var(--border);
+          padding: 10px;
+          text-align: center;
+        }
+        th {
+          background: #eef4ff;
+          color: var(--blue);
+          font-weight: 600;
+        }
+        tr:nth-child(even) { background: #f9fbff; }
+        .present { color: var(--ok); font-weight: 600; }
+        .absent { color: var(--warn); font-weight: 600; }
+        .no-records {
+          text-align: center;
+          color: var(--muted);
+          padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="brand">SmartVision+ • Attendance Records</div>
+    <div class="nav-actions">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="camera.html">📷 Camera</a>
+        <a href="enroll.html">🧑‍🎓 Enroll</a>
+    </div>
+</nav>
+
+<main>
+    <h2>📊 Attendance Records</h2>
+
+    <div class="filters">
+        <select id="classFilter">
+            <option value="">All Classes</option>
+            <option>CSE-A</option>
+            <option>CSE-B</option>
+            <option>IT-A</option>
+            <option>ECE-A</option>
+        </select>
+
+        <input type="date" id="fromDate" placeholder="From Date" />
+        <input type="date" id="toDate" placeholder="To Date" />
+        <button id="btnFilter">🔍 Filter</button>
+        <button id="btnExport">📤 Export CSV</button>
+        <button id="btnRefresh">🔄 Refresh</button>
+    </div>
+
+    <table id="attendanceTable">
+        <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Student Name</th>
+            <th>Register No</th>
+            <th>Class</th>
+            <th>Department</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="attendanceBody">
+        <tr><td colspan="7" class="no-records">No attendance records yet.</td></tr>
+        </tbody>
+    </table>
+</main>
+
+<script>
+    const API_URL = "http://127.0.0.1:5001/api/attendance";
+
+    async function fetchAttendance(params = {}) {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`${API_URL}?${query}`);
+      const data = await res.json();
+      if (data.success) renderTable(data.records);
+    }
+
+    function renderTable(records) {
+      const body = document.getElementById("attendanceBody");
+      body.innerHTML = "";
+
+      if (!records || records.length === 0) {
+        body.innerHTML = `<tr><td colspan="7" class="no-records">No attendance records found.</td></tr>`;
+        return;
+      }
+
+      records.forEach((r, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${r.student_name}</td>
+          <td>${r.reg_no}</td>
+          <td>${r.class_name}</td>
+          <td>${r.department}</td>
+          <td>${r.date}</td>
+          <td class="${r.status === "Present" ? "present" : "absent"}">${r.status}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    document.getElementById("btnFilter").addEventListener("click", () => {
+      const cls = document.getElementById("classFilter").value;
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
+      fetchAttendance({ class: cls, from, to });
+    });
+
+    document.getElementById("btnRefresh").addEventListener("click", () => {
+      fetchAttendance();
+    });
+
+    document.getElementById("btnExport").addEventListener("click", async () => {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      if (data.success) exportCSV(data.records);
+    });
+
+    function exportCSV(records) {
+      if (!records.length) {
+        alert("No records to export!");
+        return;
+      }
+      const header = ["S.No", "Student Name", "Reg No", "Class", "Department", "Date", "Status"];
+      const rows = records.map((r, i) => [
+        i + 1,
+        r.student_name,
+        r.reg_no,
+        r.class_name,
+        r.department,
+        r.date,
+        r.status
+      ]);
+
+      let csv = header.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "SmartVision_Attendance.csv";
+      a.click();
+    }
+
+    // Auto load on page start
+    fetchAttendance();
+</script>
+</body>
+</html>
