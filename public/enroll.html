@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartVision+ | Enroll Student</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: "Segoe UI", sans-serif;
+          background: linear-gradient(135deg, #001F54, #004AAD);
+          color: #fff;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+
+        h2 {
+          color: #00e0ff;
+          text-shadow: 0 0 10px #00e0ff;
+          margin-bottom: 25px;
+        }
+
+        .enroll-box {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 40px;
+          border-radius: 15px;
+          width: 90%;
+          max-width: 500px;
+          text-align: center;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+          animation: fadeIn 1s ease-in-out;
+        }
+
+        input, select {
+          width: 100%;
+          padding: 12px;
+          border: none;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          font-size: 1em;
+          background: rgba(255,255,255,0.9);
+          color: #000;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #00d9ff;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: bold;
+          font-size: 1.1em;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        button:hover {
+          background: #00a9cc;
+          box-shadow: 0 0 10px #00d9ff;
+        }
+
+        a {
+          color: #00e0ff;
+          text-decoration: none;
+          display: block;
+          margin-top: 15px;
+        }
+
+        a:hover {
+          text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<h2>🧑‍🎓 Enroll New Student</h2>
+<div class="enroll-box">
+    <form action="/enroll" method="POST">
+        <input type="text" name="name" placeholder="Student Name" required>
+        <input type="text" name="reg_no" placeholder="Register Number" required>
+        <select name="class_name" required>
+            <option value="">Select Class</option>
+            <option value="CSE-A">CSE - A</option>
+            <option value="CSE-B">CSE - B</option>
+            <option value="AIML">AIML</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+        </select>
+        <button type="submit">Enroll Student</button>
+    </form>
+    <a href="/dashboard.html">← Back to Dashboard</a>
+</div>
+</body>
+</html>
